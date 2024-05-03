@@ -1,0 +1,12 @@
+{
+    "cmake.sourceDirectory": "/Users/powerdj/dev/Server/go/webp/internal/libwebp-1.4.0",
+    "files.associations": {
+        "encode.h": "c",
+        "mux.h": "c",
+        "common_sse41.h": "c",
+        "dsp.h": "c",
+        "types.h": "c",
+        "webp.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
+}

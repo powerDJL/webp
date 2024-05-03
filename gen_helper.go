@@ -11,8 +11,8 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"log"
+	"os"
 	"path/filepath"
 	"strings"
 )
@@ -33,14 +33,14 @@ func clearOldGenFiles() {
 		log.Fatal(err)
 	}
 	for i := 0; i < len(ss); i++ {
-		ioutil.WriteFile(ss[i], []byte("#error file removed!!!\n"), 0666)
+		os.WriteFile(ss[i], []byte("#error file removed!!!\n"), 0666)
 		oldGenFiles[ss[i]] = true
 	}
 }
 
 func genIncludeFiles() {
-	ss := parseCMakeListsTxt("internal/libwebp-1.0.3/CMakeLists.txt", "WEBP_SRC_DIR", "*.c")
-	muxSS, err := findFiles("internal/libwebp-1.0.3/src/mux", "*.c")
+	ss := parseCMakeListsTxt("internal/libwebp-1.4.0/CMakeLists.txt", "WEBP_SRC_DIR", "*.c")
+	muxSS, err := findFiles("internal/libwebp-1.4.0/src/mux", "*.c")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -49,7 +49,7 @@ func genIncludeFiles() {
 		relpath := ss[i][23:] // drop `./`
 		newname := "z_libwebp_" + strings.Replace(relpath, "/", "_", -1)
 
-		ioutil.WriteFile(newname, []byte(fmt.Sprintf(
+		os.WriteFile(newname, []byte(fmt.Sprintf(
 			`// Copyright 2014 <chaishushan{AT}gmail.com>. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
@@ -71,14 +71,14 @@ func printOldGenFiles() {
 		return
 	}
 	fmt.Printf("Removed Files:\n")
-	for k, _ := range oldGenFiles {
+	for k := range oldGenFiles {
 		fmt.Printf("%s\n", k)
 	}
 	fmt.Printf("Total %d\n", len(oldGenFiles))
 }
 
 func parseCMakeListsTxt(filename, varname, ext string) (ss []string) {
-	data, err := ioutil.ReadFile(filename)
+	data, err := os.ReadFile(filename)
 	if err != nil {
 		log.Fatal(err)
 	}
