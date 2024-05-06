@@ -8,6 +8,8 @@
 package webp
 
 import (
+	"errors"
+	"fmt"
 	"image"
 	"image/color"
 	"io"
@@ -42,7 +44,44 @@ func Save(name string, m image.Image, opt *Options) (err error) {
 func Encode(w io.Writer, m image.Image, opt *Options) (err error) {
 	return encode(w, m, opt)
 }
+func AdjustImage(m image.Image) image.Image {
 
+	return adjustImage(m)
+}
+func GetEncodeByte(m image.Image, opt *Options) (webpData []byte, err error) {
+	if opt != nil && opt.Lossless {
+		switch m := adjustImage(m).(type) {
+		case *image.Gray:
+			return EncodeLosslessGray(m)
+		case *RGBImage:
+			return EncodeLosslessRGB(m)
+		case *image.RGBA:
+			if opt.Exact {
+				return EncodeExactLosslessRGBA(m)
+			} else {
+				return EncodeLosslessRGBA(m)
+			}
+		default:
+			return nil, errors.New("image/webp: Encode, unreachable")
+		}
+	} else {
+		quality := float32(DefaulQuality)
+		if opt != nil {
+			quality = opt.Quality
+		}
+
+		switch m := adjustImage(m).(type) {
+		case *image.Gray:
+			return EncodeGray(m, quality)
+		case *RGBImage:
+			return EncodeRGB(m, quality)
+		case *image.RGBA:
+			return EncodeRGBA(m, quality)
+		default:
+			return nil, errors.New("image/webp: Encode, unreachable")
+		}
+	}
+}
 func encode(w io.Writer, m image.Image, opt *Options) (err error) {
 	var output []byte
 	if opt != nil && opt.Lossless {
@@ -93,7 +132,6 @@ func encode(w io.Writer, m image.Image, opt *Options) (err error) {
 	_, err = w.Write(output)
 	return
 }
-
 func adjustImage(m image.Image) image.Image {
 	if p, ok := AsMemPImage(m); ok {
 		switch {
@@ -125,26 +163,36 @@ func adjustImage(m image.Image) image.Image {
 	}
 	switch m := m.(type) {
 	case *image.Gray:
+		fmt.Printf(".Gray")
 		return m
 	case *RGBImage:
+		fmt.Printf(".RGBImage")
 		return m
 	case *RGB48Image:
+		fmt.Printf(".RGB48Image")
 		return NewRGBImageFrom(m)
 	case *image.RGBA:
+		fmt.Printf(".RGBA")
 		return m
 	case *image.YCbCr:
+		fmt.Printf(".YCbCr")
 		return NewRGBImageFrom(m)
 
 	case *image.Gray16:
+		fmt.Printf(".Gray16")
 		return toGrayImage(m)
 	case *image.RGBA64:
+		fmt.Printf(").RGBA64")
 		return toRGBAImage(m)
 	case *image.NRGBA:
+		fmt.Printf(".NRGBA")
 		return toRGBAImage(m)
 	case *image.NRGBA64:
+		fmt.Printf(".NRGBA64")
 		return toRGBAImage(m)
 
 	default:
+		fmt.Printf(".default toRGBAImage")
 		return toRGBAImage(m)
 	}
 }

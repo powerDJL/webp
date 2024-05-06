@@ -40,11 +40,13 @@ func clearOldGenFiles() {
 
 func genIncludeFiles() {
 	ss := parseCMakeListsTxt("internal/libwebp-1.4.0/CMakeLists.txt", "WEBP_SRC_DIR", "*.c")
+	sharSS, err := findFiles("internal/libwebp-1.4.0/sharpyuv", "*.c")
 	muxSS, err := findFiles("internal/libwebp-1.4.0/src/mux", "*.c")
 	if err != nil {
 		log.Fatal(err)
 	}
 	ss = append(ss, muxSS...)
+	ss = append(ss, sharSS...)
 	for i := 0; i < len(ss); i++ {
 		relpath := ss[i][23:] // drop `./`
 		newname := "z_libwebp_" + strings.Replace(relpath, "/", "_", -1)
