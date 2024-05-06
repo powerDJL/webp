@@ -1,11 +1,17 @@
-  New :
-     libwebp update to  1.4.0
-     go  1.21.1
-     giflib 5.2.2
-     Add method for converting GIF to WebP. See example in the file hello_animate.go.
+New :
+========
+     - *libwebp update to  1.4.0
+     - *go  1.21.1
+     - *giflib 5.2.2
+     - *Add method for converting GIF to WebP. See example in the file hello_animate.go.
 
-I referred to the sizeofint/animatewebp（https://github.com/sizeofint/webpanimation） project, but due to the limited support of Go for GIF handling, the conversion results were less than ideal. Consequently, I opted to use C methods for decoding GIFs instead. Drawing inspiration from the gif2webp example within the libwebp library, I facilitated its invocation from Go. So far, this approach has proven to be effective, yielding satisfactory results.
 
+I referred to the sizeofint/animatewebp（https://github.com/sizeofint/webpanimation） project, but due to the limited support of Go for GIF handling,
+the conversion results were less than ideal. Consequently, I opted to use C methods for decoding GIFs instead.
+Drawing inspiration from the gif2webp example within the libwebp library, I facilitated its invocation from Go.
+So far, this approach has proven to be effective, yielding satisfactory results.
+
+----
 
 - *Go语言QQ群: 102319854, 1055927514*
 - *凹语言(凹读音“Wa”)(The Wa Programming Language): https://github.com/wa-lang/wa*
