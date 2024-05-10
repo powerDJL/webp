@@ -547,7 +547,6 @@ func webpDelXMP(data []byte) (newData []byte, err error) {
 
 // //////////animation webp method///////////////////
 const (
-	WebpMuxAbiVersion     = 0x0108
 	WebpEncoderAbiVersion = 0x020f
 )
 
